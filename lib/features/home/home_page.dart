@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:mine_space/features/widgets/music_widget.dart';
+import 'package:mine_space/features/widgets/sound_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +12,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  bool _showSoundWidget = true;
+  bool _showMusicWidget = true;
+  bool _isMusicHovered = false;
+  bool _isSoundHovered = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +122,61 @@ class _HomePage extends State<HomePage> {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            right: 16,
+            bottom: 100,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  MouseRegion(
+                    onEnter: (_) => setState(() => _isMusicHovered = true),
+                    onExit: (_) => setState(() => _isMusicHovered = false),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _showMusicWidget = !_showMusicWidget;
+                        });
+                      },
+                      child: Icon(
+                        Icons.music_note,
+                        color: _isMusicHovered ? Colors.amber : Colors.white,
+                      ),
+                    ),
+                  ),
+                  MouseRegion(
+                    onEnter: (_) => setState(() => _isSoundHovered = true),
+                    onExit: (_) => setState(() => _isSoundHovered = false),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _showSoundWidget = !_showSoundWidget;
+                        });
+                      },
+                      child: Icon(
+                        Icons.graphic_eq,
+                        color: _isSoundHovered ? Colors.amber : Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 360,
+            child: SoundWidget(visible: _showSoundWidget),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 160,
+            child: MusicWidget(visible: _showMusicWidget),
           ),
         ],
       ),
