@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mine_space/features/home/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MineSpace());
 }
 
