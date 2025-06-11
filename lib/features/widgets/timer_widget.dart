@@ -154,18 +154,18 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 30),
           SizedBox(
-            width: 300,
+            width: 270,
             child: TextField(
               cursorColor:
                   settings.textColor == Colors.white
-                      ? Colors.white.withOpacity(0.3)
+                      ? Colors.white.withOpacity(0.2)
                       : Colors.black.withOpacity(0.3),
               controller: _goalController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: '목표 글귀 입력',
+                labelText: '목표 입력',
                 labelStyle: TextStyle(
                   color:
                       settings.textColor == Colors.white
@@ -176,7 +176,7 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
                   borderSide: BorderSide(
                     color:
                         settings.textColor == Colors.white
-                            ? Colors.white.withOpacity(0.7)
+                            ? Colors.white.withOpacity(0.2)
                             : Colors.black.withOpacity(0.7),
                   ),
                 ),
@@ -184,23 +184,39 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
                   borderSide: BorderSide(
                     color:
                         settings.textColor == Colors.white
-                            ? Colors.white.withOpacity(0.7)
+                            ? Colors.white.withOpacity(0.2)
                             : Colors.black.withOpacity(0.7),
                   ),
                 ),
               ),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 40),
 
-          ElevatedButton(
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               setState(() {
                 _goalText = _goalController.text;
               });
               _onDurationChanged(_tempDuration);
             },
-            child: Text('설정하기'),
+            child: Container(
+              width: 340,
+              height: 70,
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              decoration: BoxDecoration(
+                color:
+                    settings.textColor == Colors.white
+                        ? Colors.white.withOpacity(0.1)
+                        : Colors.black12,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                '도전하기 🚀',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
           ),
         ],
       );

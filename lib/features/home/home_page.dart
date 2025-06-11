@@ -6,7 +6,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mine_space/features/repo/setting_provider.dart';
-import 'package:mine_space/features/widgets/%08timer_widget.dart';
+import 'package:mine_space/features/widgets/timer_widget.dart';
 import 'package:mine_space/features/widgets/music_widget.dart';
 import 'package:mine_space/features/widgets/sound_widget.dart';
 
@@ -73,9 +73,11 @@ class _HomePage extends ConsumerState<HomePage> {
                         ],
                       ),
                       Text(
-                        '나만의 집중공간',
+                        'Mine Space',
                         style: TextStyle(
-                          fontSize: 30,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
                           height: 0.8,
                           color: settings.textColor,
                         ),
@@ -90,7 +92,19 @@ class _HomePage extends ConsumerState<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(),
-                      Row(children: [Text('BLACKPEN SOFT.')]),
+                      Row(
+                        children: [
+                          Text(
+                            'BLACKPEN SOFT.',
+                            style: TextStyle(
+                              color:
+                                  settings.textColor == Colors.white
+                                      ? Colors.white
+                                      : Colors.black26,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -101,14 +115,23 @@ class _HomePage extends ConsumerState<HomePage> {
             right: 16,
             bottom: 70,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.only(left: 20, right: 8, bottom: 8, top: 8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(8),
+                color: Colors.black.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(2320),
               ),
               child: Row(
                 children: [
-                  Text('사운드 컨드롤', style: TextStyle(color: Colors.grey)),
+                  Text(
+                    '사운드 패널',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color:
+                          settings.textColor == Colors.white
+                              ? Colors.white.withOpacity(0.4)
+                              : Colors.black45,
+                    ),
+                  ),
                   SizedBox(width: 10),
                   MouseRegion(
                     onEnter: (_) => setState(() => _isMusicHovered = true),
@@ -124,11 +147,14 @@ class _HomePage extends ConsumerState<HomePage> {
                         decoration: BoxDecoration(
                           color:
                               _isMusicHovered ? Colors.white24 : Colors.white10,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Icon(
                           Icons.music_note,
-                          color: _isMusicHovered ? Colors.amber : Colors.white,
+                          color:
+                              settings.textColor == Colors.white
+                                  ? Colors.white
+                                  : Colors.black26,
                         ),
                       ),
                     ),
@@ -148,11 +174,14 @@ class _HomePage extends ConsumerState<HomePage> {
                         decoration: BoxDecoration(
                           color:
                               _isSoundHovered ? Colors.white24 : Colors.white10,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         child: Icon(
                           Icons.graphic_eq,
-                          color: _isSoundHovered ? Colors.amber : Colors.white,
+                          color:
+                              settings.textColor == Colors.white
+                                  ? Colors.white
+                                  : Colors.black26,
                         ),
                       ),
                     ),
