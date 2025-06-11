@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 
@@ -24,6 +25,7 @@ class _HomePage extends ConsumerState<HomePage> {
   bool _isMusicHovered = false;
   bool _isSoundHovered = false;
   bool _isBottomHovered = false;
+  bool _hasShownIntro = false;
 
   late Timer _textSwitchTimer;
   bool _showMainText = true;
@@ -36,6 +38,25 @@ class _HomePage extends ConsumerState<HomePage> {
         _showMainText = !_showMainText;
       });
     });
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_hasShownIntro) {
+        _hasShownIntro = true;
+        showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: Text('안내'),
+                content: Text('안내사항'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('확인'),
+                  ),
+                ],
+              ),
+        );
+      }
+    });*/
   }
 
   @override
@@ -92,16 +113,16 @@ class _HomePage extends ConsumerState<HomePage> {
                 Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      /*Row(
                         children: [
                           Text('소개'),
                           SizedBox(width: 20),
                           Text('사용방법'),
                         ],
-                      ),
+                      ),*/
                       AnimatedSwitcher(
                         duration: Duration(seconds: 1),
                         transitionBuilder: (

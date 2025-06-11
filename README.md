@@ -1,16 +1,33 @@
-# mine_space
+# Mine Space Timer
 
-A new Flutter project.
+대학교 기말고사 대체 과제로 개발한 **나만의 집중 타이머**입니다.  
+Flutter 웹으로 구현되었으며, 심플하면서도 집중도를 높여주는 다양한 기능을 제공합니다.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 프로젝트 소개
 
-A few resources to get you started if this is your first Flutter project:
+`Mine Space (나만의 집중공간)`는 사용자가 설정한 시간 동안 집중할 수 있도록 도와주는 타이머입니다.  
+타이머가 끝나면 효과음과 함께 화면이 깜빡이며 알림을 주고, 사용자는 목표를 설정해 동기 부여를 받을 수 있습니다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 주요 기능
+
+1. **시간 설정**
+   - 시·분·초 단위로 자유롭게 타이머를 설정할 수 있습니다.
+2. **목표 설정**
+   - 타이머 시작 전 목표 텍스트를 입력하면, 완료 시 해당 목표명이 화면에 표시됩니다.
+3. **사운드 패널**
+   - **빗소리** 효과
+   - **음악** 재생
+   - 재생/일시정지 및 볼륨 조절
+4. **배경 이미지 변경**
+   - 로컬 이미지 및 네트워크 이미지를 3×n 그리드로 선택
+   - 흐림(Blur) 효과 및 단색 배경 설정
+5. **끝맺음 알림**
+   - 타이머 종료 시 효과음 재생
+   - 화면 깜빡임(Blue Flash) 애니메이션
+   - “다시하기” 버튼으로 리셋 및 재시작
+
+---
