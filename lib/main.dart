@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:mine_space/features/home/home_page.dart';
+import 'package:mine_space/screen/home/home_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
@@ -21,7 +21,7 @@ class MineSpace extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ko', ''), Locale('en', '')],
-      title: 'Flutter Demo',
+      title: '나만의 집중공간 | MineSpace',
       home: HomePage(),
     );
   }

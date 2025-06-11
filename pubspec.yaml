@@ -65,7 +65,12 @@ flutter:
   assets:
     - assets/Music/yourname.mp3
     - assets/Sound/test.mp3
-
+    - assets/Image/wallpaper/night/
+    - assets/Image/wallpaper/city/
+    - assets/Image/wallpaper/mountain/
+    - assets/Image/wallpaper/system/
+    - assets/Image/wallpaper/etc/
+    - assets/Sound/alarm.mp3
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
