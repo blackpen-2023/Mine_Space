@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mine_space/features/repo/setting_provider.dart';
 import 'package:mine_space/features/widgets/%08timer_widget.dart';
@@ -77,14 +79,6 @@ class _HomePage extends ConsumerState<HomePage> {
                           height: 0.8,
                           color: settings.textColor,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Text('설정'),
-                          Text('설정'),
-                          Text('설정'),
-                          Text('설정'),
-                        ],
                       ),
                     ],
                   ),
@@ -190,7 +184,6 @@ class _HomePage extends ConsumerState<HomePage> {
                     'type': settings.bgType,
                     'url': settings.bgImageUrl,
                     'color': settings.bgColor,
-                    'textColor': settings.textColor,
                   };
                   await showModalBottomSheet<Map<String, dynamic>>(
                     context: context,
@@ -199,7 +192,6 @@ class _HomePage extends ConsumerState<HomePage> {
                       BackgroundType tmpType = settings.bgType;
                       String tmpUrl = settings.bgImageUrl;
                       Color tmpColor = settings.bgColor;
-                      Color tmpTextColor = settings.textColor;
                       return StatefulBuilder(
                         builder: (context, setModalState) {
                           return Padding(
@@ -283,36 +275,7 @@ class _HomePage extends ConsumerState<HomePage> {
                                             );
                                           }).toList(),
                                     ),
-                                  ListTile(title: Text('글자 색상 선택')),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children:
-                                        [Colors.white, Colors.black].map((c) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setModalState(
-                                                () => tmpTextColor = c,
-                                              );
-                                              notifier.setTextColor(c);
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.all(8),
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(
-                                                color: c,
-                                                border:
-                                                    tmpTextColor == c
-                                                        ? Border.all(
-                                                          width: 2,
-                                                          color: Colors.amber,
-                                                        )
-                                                        : null,
-                                              ),
-                                            ),
-                                          );
-                                        }).toList(),
-                                  ),
+
                                   SizedBox(height: 16),
                                   ElevatedButton(
                                     onPressed:
@@ -320,7 +283,6 @@ class _HomePage extends ConsumerState<HomePage> {
                                           'type': tmpType,
                                           'url': tmpUrl,
                                           'color': tmpColor,
-                                          'textColor': tmpTextColor,
                                         }),
                                     child: Text('확인'),
                                   ),
@@ -335,20 +297,88 @@ class _HomePage extends ConsumerState<HomePage> {
                   // No need to update parent state here, as changes are already applied.
                 },
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
                     color:
-                        _isBottomHovered
-                            ? Colors.white.withOpacity(1.0)
-                            : Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(8),
+                        settings.textColor == Colors.white
+                            ? _isBottomHovered
+                                ? Colors.white.withOpacity(0.4)
+                                : Colors.white.withOpacity(0.3)
+                            : _isBottomHovered
+                            ? Colors.black.withOpacity(0.8)
+                            : Colors.black.withOpacity(0.3),
                   ),
                   child: Text(
-                    '나만의 공간 만들기',
-                    style: TextStyle(fontSize: 20, color: settings.textColor),
+                    '공간 편집하기',
+                    style: TextStyle(
+                      fontSize: 17,
+                      color:
+                          settings.textColor == Colors.white
+                              ? Colors.white.withOpacity(0.8)
+                              : Colors.white.withOpacity(0.3),
+                    ),
                   ),
                 ),
               ),
+            ),
+          ),
+          Positioned(
+            left: 30,
+            bottom: 120,
+            child: Consumer(
+              builder: (context, ref, _) {
+                final settings = ref.watch(settingProvider);
+                final notifier = ref.read(settingProvider.notifier);
+                final isWhite = settings.textColor == Colors.white;
+                return Container(
+                  width: 70,
+                  height: 30,
+                  child: AnimatedToggleSwitch<bool>.dual(
+                    current: isWhite,
+                    first: true,
+                    second: false,
+                    indicatorSize: Size(250, 30),
+                    //spacing: 1.0,
+                    style: ToggleStyle(
+                      backgroundColor:
+                          isWhite
+                              ? Colors.black.withOpacity(0.1)
+                              : Colors.black.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(30.0),
+                      indicatorColor:
+                          isWhite
+                              ? Colors.white.withOpacity(0.9)
+                              : Colors.black.withOpacity(0.4),
+                      borderColor: Colors.transparent,
+                      boxShadow: const [],
+                    ),
+                    onChanged: (value) {
+                      final newColor = value ? Colors.white : Colors.black;
+                      notifier.setTextColor(newColor);
+                    },
+                    iconBuilder:
+                        (value) =>
+                            value
+                                ? Icon(
+                                  Icons.light_mode_outlined,
+                                  color: Colors.amber,
+                                )
+                                : Icon(
+                                  Icons.dark_mode_outlined,
+                                  color: Colors.black,
+                                ),
+                    /*textBuilder:
+                            (value) => Text(
+                              value ? "라이트" : "다크",
+                              style: TextStyle(
+                                color: value ? Colors.white : Colors.black,
+                                fontSize: 14,
+                              ),
+                            ),*/
+                  ),
+                );
+              },
             ),
           ),
         ],

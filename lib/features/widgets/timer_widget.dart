@@ -156,18 +156,37 @@ class _TimerWidgetState extends ConsumerState<TimerWidget> {
           ),
           SizedBox(height: 10),
           SizedBox(
-            width: 200,
+            width: 300,
             child: TextField(
+              cursorColor:
+                  settings.textColor == Colors.white
+                      ? Colors.white.withOpacity(0.3)
+                      : Colors.black.withOpacity(0.3),
               controller: _goalController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: '목표 글귀 입력',
-                labelStyle: TextStyle(color: settings.textColor),
+                labelStyle: TextStyle(
+                  color:
+                      settings.textColor == Colors.white
+                          ? Colors.white.withOpacity(0.7)
+                          : Colors.black.withOpacity(0.7),
+                ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: settings.textColor),
+                  borderSide: BorderSide(
+                    color:
+                        settings.textColor == Colors.white
+                            ? Colors.white.withOpacity(0.7)
+                            : Colors.black.withOpacity(0.7),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: settings.textColor),
+                  borderSide: BorderSide(
+                    color:
+                        settings.textColor == Colors.white
+                            ? Colors.white.withOpacity(0.7)
+                            : Colors.black.withOpacity(0.7),
+                  ),
                 ),
               ),
             ),
