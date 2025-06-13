@@ -25,6 +25,9 @@ class _HomePage extends ConsumerState<HomePage> {
   bool _isBottomHovered = false;
   bool _hasShownIntro = false;
   bool _hideAllWidgets = false;
+  DateTime _lastToggleTime = DateTime.fromMillisecondsSinceEpoch(0);
+
+  Timer? _toggleCooldownTimer;
 
   late Timer _textSwitchTimer;
   bool _showMainText = true;
@@ -73,13 +76,24 @@ class _HomePage extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingProvider);
+    final now = DateTime.now();
+    final toggleDiff = now.difference(_lastToggleTime);
+    final isInCooldown = toggleDiff < Duration(seconds: 5);
+    final remainingMs = (5000 - toggleDiff.inMilliseconds).clamp(0, 5000);
+    final toggleProgress = remainingMs / 5000;
     return RawKeyboardListener(
       focusNode: _focusNode,
       autofocus: true,
       onKey: (RawKeyEvent event) {
         if (event is RawKeyDownEvent &&
             event.logicalKey == LogicalKeyboardKey.keyF) {
-          setState(() => _hideAllWidgets = !_hideAllWidgets);
+          final now = DateTime.now();
+          if (now.difference(_lastToggleTime) >= Duration(seconds: 5)) {
+            setState(() {
+              _hideAllWidgets = !_hideAllWidgets;
+              _lastToggleTime = now;
+            });
+          }
         }
       },
       child: Scaffold(
@@ -151,7 +165,7 @@ class _HomePage extends ConsumerState<HomePage> {
                               );
                             },
                             child: SizedBox(
-                              width: 230, // 가장 긴 문구보다 여유 있는 크기
+                              width: 270, // 가장 긴 문구보다 여유 있는 크기
                               key: ValueKey(_showMainText),
                               child: Text(
                                 _showMainText ? '나만의 집중공간' : 'MineSpace',
@@ -724,7 +738,30 @@ class _HomePage extends ConsumerState<HomePage> {
               left: 30,
               bottom: 30,
               child: GestureDetector(
-                onTap: () => setState(() => _hideAllWidgets = !_hideAllWidgets),
+                onTap: () {
+                  final now = DateTime.now();
+                  if (now.difference(_lastToggleTime) >= Duration(seconds: 5)) {
+                    setState(() {
+                      _hideAllWidgets = !_hideAllWidgets;
+                      _lastToggleTime = now;
+                    });
+                  } else {
+                    // 시작된 쿨다운동안 UI 업데이트용 타이머
+                    if (_toggleCooldownTimer == null) {
+                      _toggleCooldownTimer = Timer.periodic(
+                        Duration(milliseconds: 100),
+                        (timer) {
+                          if (DateTime.now().difference(_lastToggleTime) >=
+                              Duration(seconds: 5)) {
+                            timer.cancel();
+                            _toggleCooldownTimer = null;
+                          }
+                          setState(() {});
+                        },
+                      );
+                    }
+                  }
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   decoration: BoxDecoration(
@@ -738,6 +775,27 @@ class _HomePage extends ConsumerState<HomePage> {
                 ),
               ),
             ),
+            // Cooldown subtle message
+            if (isInCooldown)
+              Positioned(
+                right: 30,
+                bottom: 30,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '5초뒤에 다시 사용가능...',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              ),
             Visibility(
               visible: !_hideAllWidgets,
               child: Positioned(

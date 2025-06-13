@@ -70,10 +70,16 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
   void _startTimer() async {
     _timer = Timer.periodic(Duration(seconds: 1), (_) async {
       if (_remaining.inSeconds > 0) {
-        setState(() => _remaining -= Duration(seconds: 1));
+        if (mounted) {
+          setState(() => _remaining -= Duration(seconds: 1));
+        }
       } else {
         if (_isAlarmEnabled) {
           try {
+            // 안전장치: 오디오 재생 전 player가 이미 재생 중이면 중지
+            if (_audioPlayer.playerState.playing) {
+              await _audioPlayer.stop();
+            }
             await _audioPlayer.setAsset('assets/Sound/alarm.mp3');
             await _audioPlayer.play();
           } catch (e) {
@@ -81,13 +87,17 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
           }
         }
         _timer?.cancel();
-        setState(() => _isRunning = false);
+        if (mounted) {
+          setState(() => _isRunning = false);
+        }
       }
     });
-    setState(() {
-      _isRunning = true;
-      _hasStarted = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isRunning = true;
+        _hasStarted = true;
+      });
+    }
   }
 
   void _toggleRunPause() {
@@ -263,8 +273,8 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
                 style: TextStyle(
                   fontFamily: 'AGR',
                   color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

@@ -12,7 +12,7 @@ class SettingState {
   final bool isAlarmEnabled;
 
   const SettingState({
-    this.bgType = BackgroundType.image,
+    this.bgType = BackgroundType.local,
     this.bgImageUrl = 'assets/Image/wallpaper/mountain/mountain_1.jpg',
     this.bgColor = Colors.black,
     this.textColor = Colors.white,
@@ -72,3 +72,5 @@ final settingProvider = StateNotifierProvider<SettingNotifier, SettingState>((
 ) {
   return SettingNotifier();
 });
+
+final hideWidgetsProvider = StateProvider<bool>((ref) => false);
