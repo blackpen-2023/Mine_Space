@@ -24,7 +24,7 @@ class MineSpace extends StatelessWidget {
       ],
 
       supportedLocales: const [Locale('ko', ''), Locale('en', '')],
-      title: '나만의 집중공간 | MineSpace`',
+      title: '나만의 집중공간 | MineSpace',
       home: HomePage(),
     );
   }

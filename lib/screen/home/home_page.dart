@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,16 +46,42 @@ class _HomePage extends ConsumerState<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
-    /*WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_hasShownIntro) {
         _hasShownIntro = true;
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder:
               (context) => AlertDialog(
-                title: Text('안내'),
-                content: Text('안내사항'),
+                backgroundColor: Colors.white,
+                title: Text('환영합니다!'),
+                content: Container(
+                  height: 240,
+                  width: 400,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '이 웹앱은 작업과 공부에 필요한 집중 환경(타이머, 배경음악, 배경화면)을 한 곳에서 빠르게 설정할 수 있는 Flutter 웹앱입니다.\n\n작업이나 공부에 집중할 때마다 음악을 고르고, 배경음을 설정하고, 타이머를 켜고, 알맞은 배경화면을 고르는 과정은 생각보다 번거롭고 시간이 많이 듭니다.  Mine Space는 이런 반복적인 설정 과정을 하나의 앱으로 통합하여, 단 몇 번의 클릭만으로 나만의 최적화된 집중 환경을 즉시 구축할 수 있도록 설계했습니다.  한 번 환경을 저장해두면 다음부터는 바로 불러와 사용할 수 있어, 집중 흐름을 방해받지 않고 몰입에 전념할 수 있습니다.',
+                      ),
+                      SizedBox(height: 20),
+                      Text('자세한 설명은 깃헙 README 를 참고해주세요.'),
+                    ],
+                  ),
+                ),
                 actions: [
+                  TextButton(
+                    onPressed: () async {
+                      final uri = Uri.parse(
+                        'https://github.com/blackpen-2023/Mine_Space/blob/main/README.md',
+                      );
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    },
+                    child: Text('깃허브 바로가기'),
+                  ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
                     child: Text('확인'),
@@ -63,7 +90,7 @@ class _HomePage extends ConsumerState<HomePage> {
               ),
         );
       }
-    });*/
+    });
   }
 
   @override

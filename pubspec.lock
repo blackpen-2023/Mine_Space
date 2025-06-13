@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   animated_toggle_switch:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: animated_toggle_switch
       sha256: "31ba41bb2b13b1324da8370bda934cd569e77d42ce5950cf1d31707b6061a0d0"
@@ -119,7 +119,7 @@ packages:
     source: hosted
     version: "5.0.0"
   flutter_localization:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_localization
       sha256: "987faf0a6c13a267202b28d3ed680647e234245ead1a1c1f95f87e86c6f12490"
@@ -132,7 +132,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_riverpod:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_riverpod
       sha256: "9532ee6db4a943a1ed8383072a2e3eeda041db5657cdf6d2acecf3c21ecbe7e1"
@@ -222,7 +222,7 @@ packages:
     source: hosted
     version: "5.1.1"
   localization:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: localization
       sha256: "9fa21644b75ca3fe844f8f115d03cd6fdc675054dd9aab6c5de5861145ea57b5"
@@ -627,7 +627,7 @@ packages:
     source: hosted
     version: "1.1.0"
   youtube_player_iframe:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: youtube_player_iframe
       sha256: "66020f7756accfb22b3297565d845f9bef14249c730dd51e1ec648fa155fb24a"
