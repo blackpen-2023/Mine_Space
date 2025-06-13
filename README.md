@@ -45,10 +45,10 @@ Mine Space는 이런 반복적인 설정 과정을 하나의 앱으로 통합하
 ## 설치 및 실행
 
 **이 앱을 직접 디버깅하기 위해선 Flutter SDK가 필요합니다!**
-
-> 따라서 웹 호스팅을 미리 해뒀습니다.
+> 따라서 웹 호스팅을 통해서 배포를 진행해뒀습니다.
 
 https://mine-space-4d11f.web.app/
+> Firebase Hosting 으로 호스팅됐습니다.
 
 ### 직접 디버깅시
 
@@ -75,6 +75,7 @@ https://mine-space-4d11f.web.app/
    ```bash
    flutter run -d chrome
    ```
+~~윈도우 EXE 실행파일은 의존성 문제로 빌드하지 못했습니다.~~
 
 ## 사용 방법
 
@@ -91,25 +92,9 @@ https://mine-space-4d11f.web.app/
 
 ## 향후 계획
 
-- 유튜브 영상을 배경 음악 또는 배경 영상으로 설정할 수 있는 기능
-- 데이터베이스 연동을 통해 사용자가 설정한 환경을 저장하고 공유할 수 있는 기능
-- Todo 리스트 추가 기능으로 작업 관리 지원
-
-## 프로젝트 구조
-
-mine_space/
-├── lib/
-│ ├── screen/
-│ │ ├── home/ # HomePage 및 레이아웃
-│ │ ├── widgets/ # TimerWidget, SoundWidget, MusicWidget
-│ │ └── repo/ # 설정 상태관리(setting_provider)
-│ └── main.dart
-├── assets/ # 이미지, 음악 데이터셋
-│ ├── Image/
-│ ├── Music/
-│ └── Sound/
-├── web/
-├── pubspec.yaml
-└── README.md
+- 유튜브 영상을 배경 음악 또는 배경 영상으로 설정할 수 있는 기능을 개발중입니다.
+- 데이터베이스 연동을 통해 사용자가 설정한 환경을 저장하고 공유할 수 있는 기능을 개발중입니다.
+- 공유가 가능한 Todo 리스트 시스템을 개발중입니다.
 
 BLACKPEN SOFT.
+ⓒ 2025. 배규민 All rights reserved.
