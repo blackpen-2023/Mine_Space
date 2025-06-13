@@ -43,6 +43,7 @@ dev_dependencies:
   flutter_localization: ^0.3.2
   flutter_riverpod: ^2.6.1
   animated_toggle_switch: ^0.8.5
+  youtube_player_iframe: ^5.2.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -96,3 +97,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: AGR
+      fonts:
+        - asset: assets/Font/agr_L.ttf
+          weight: 100
+        - asset: assets/Font/agr_M.ttf
+          weight: 400
+        - asset: assets/Font/agr_B.ttf
+          weight: 800

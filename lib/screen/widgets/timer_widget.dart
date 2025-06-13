@@ -39,6 +39,8 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
   bool _showSettings = true;
   bool _hasStarted = false;
 
+  bool _isAlarmEnabled = true;
+
   late final AudioPlayer _audioPlayer;
   late final AnimationController _flashController;
 
@@ -65,15 +67,19 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
     });
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
+  void _startTimer() async {
+    _timer = Timer.periodic(Duration(seconds: 1), (_) async {
       if (_remaining.inSeconds > 0) {
         setState(() => _remaining -= Duration(seconds: 1));
       } else {
-        // Play finish sound using just_audio
-        _audioPlayer.setAsset('assets/Sound/alarm.mp3').then((_) {
-          _audioPlayer.play();
-        });
+        if (_isAlarmEnabled) {
+          try {
+            await _audioPlayer.setAsset('assets/Sound/alarm.mp3');
+            await _audioPlayer.play();
+          } catch (e) {
+            debugPrint('오디오 재생 오류: $e');
+          }
+        }
         _timer?.cancel();
         setState(() => _isRunning = false);
       }
@@ -101,6 +107,7 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
             backgroundColor: Colors.white.withOpacity(0),
             title: Text(
               '정말 그만둘까요...? 🥺',
+              textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white),
             ),
             actions: [
@@ -131,6 +138,7 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
       _remaining = newDuration;
       _isRunning = false;
       _showSettings = false;
+      _hasStarted = false;
     });
     if (widget.onDurationChanged != null) {
       widget.onDurationChanged!(newDuration);
@@ -143,6 +151,7 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
       _remaining = widget.initialDuration;
       _isRunning = false;
       _goalText = '';
+      _hasStarted = false;
     });
   }
 
@@ -150,6 +159,7 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
   void dispose() {
     _goalController.dispose();
     _timer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -188,6 +198,12 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
           SizedBox(
             width: 270,
             child: TextField(
+              style: TextStyle(
+                color:
+                    settings.textColor == Colors.white
+                        ? Colors.white.withOpacity(0.9)
+                        : Colors.black.withOpacity(0.9),
+              ),
               cursorColor:
                   settings.textColor == Colors.white
                       ? Colors.white.withOpacity(0.2)
@@ -244,15 +260,29 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
               ),
               child: Text(
                 '도전하기 🚀',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(
+                  fontFamily: 'AGR',
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
+          ),
+          AlarmToggle(
+            value: _isAlarmEnabled,
+            textColor: settings.textColor,
+            onChanged: (bool value) {
+              setState(() {
+                _isAlarmEnabled = value;
+              });
+            },
           ),
         ],
       );
     }
     if (_remaining.inSeconds > 0) {
-      final totalSeconds = widget.initialDuration.inSeconds;
+      final totalSeconds = _tempDuration.inSeconds;
       final progress =
           totalSeconds > 0 ? _remaining.inSeconds / totalSeconds : 0.0;
       final hours = _remaining.inHours.toString().padLeft(2, '0');
@@ -289,6 +319,7 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
                     _goalText.isNotEmpty ? '\' ${_goalText} \'' : '남은시간',
                     style: TextStyle(
                       fontSize: 22,
+                      fontFamily: 'AGR',
                       fontWeight: FontWeight.w100,
                       shadows: [
                         Shadow(
@@ -326,10 +357,23 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
                 onTap: _toggleRunPause,
                 child: Text(
                   _isRunning ? '일시정지' : (_hasStarted ? '이어하기' : '시작하기'),
+                  style: TextStyle(
+                    fontFamily: 'AGR',
+                    fontWeight: FontWeight.w100,
+                  ),
                 ),
               ),
               SizedBox(width: 30),
-              GestureDetector(onTap: _confirmReset, child: Text('그만두기')),
+              GestureDetector(
+                onTap: _confirmReset,
+                child: Text(
+                  '그만두기',
+                  style: TextStyle(
+                    fontFamily: 'AGR',
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -348,13 +392,21 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
                 _goalText.isNotEmpty
                     ? '\' ${_goalText} \' 가 끝났어요!'
                     : '수고했어요! 🎉',
-                style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                  fontSize: 60,
+                  fontFamily: 'AGR',
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               SizedBox(height: 10),
               _goalText.isNotEmpty
                   ? Text(
                     '수고했어요! 🎉',
-                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontFamily: 'AGR',
+                      fontWeight: FontWeight.w800,
+                    ),
                   )
                   : SizedBox(),
               SizedBox(height: 50),
@@ -374,7 +426,12 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
                   ),
                   child: Text(
                     '다시하기',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontFamily: "AGR",
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
@@ -383,5 +440,78 @@ class _TimerWidgetState extends ConsumerState<TimerWidget>
         ),
       );
     }
+  }
+}
+
+/// 알람 토글 위젯. 상태를 내부적으로 유지하며 부모와 onChanged로 통신
+class AlarmToggle extends StatefulWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+  final Color textColor;
+
+  const AlarmToggle({
+    Key? key,
+    required this.value,
+    required this.onChanged,
+    required this.textColor,
+  }) : super(key: key);
+
+  @override
+  State<AlarmToggle> createState() => _AlarmToggleState();
+}
+
+class _AlarmToggleState extends State<AlarmToggle> {
+  late bool _checked;
+
+  @override
+  void initState() {
+    super.initState();
+    _checked = widget.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant AlarmToggle oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value) {
+      _checked = widget.value;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: .0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Transform.scale(
+            scale: 0.7, // 원하는 크기로 조정 (예: 0.8은 80% 크기)
+            child: Checkbox(
+              value: _checked,
+              onChanged: (bool? value) {
+                if (value != null) {
+                  setState(() {
+                    _checked = value;
+                  });
+                  widget.onChanged(value);
+                }
+              },
+              activeColor: widget.textColor,
+              checkColor: Colors.black,
+              visualDensity: VisualDensity.compact,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              '타이머 종료 ',
+              style: TextStyle(color: widget.textColor, fontSize: 10),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

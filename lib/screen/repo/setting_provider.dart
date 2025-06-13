@@ -9,6 +9,7 @@ class SettingState {
   final Color bgColor;
   final Color textColor;
   final double blurLevel;
+  final bool isAlarmEnabled;
 
   const SettingState({
     this.bgType = BackgroundType.image,
@@ -16,6 +17,7 @@ class SettingState {
     this.bgColor = Colors.black,
     this.textColor = Colors.white,
     this.blurLevel = 10.0,
+    this.isAlarmEnabled = true,
   });
 
   SettingState copyWith({
@@ -24,6 +26,7 @@ class SettingState {
     Color? bgColor,
     Color? textColor,
     double? blurLevel,
+    bool? isAlarmEnabled,
   }) {
     return SettingState(
       bgType: bgType ?? this.bgType,
@@ -31,6 +34,7 @@ class SettingState {
       bgColor: bgColor ?? this.bgColor,
       textColor: textColor ?? this.textColor,
       blurLevel: blurLevel ?? this.blurLevel,
+      isAlarmEnabled: isAlarmEnabled ?? this.isAlarmEnabled,
     );
   }
 }
@@ -56,6 +60,10 @@ class SettingNotifier extends StateNotifier<SettingState> {
 
   void setBlurLevel(double level) {
     state = state.copyWith(blurLevel: level);
+  }
+
+  void setAlarmEnabled(bool value) {
+    state = state.copyWith(isAlarmEnabled: value);
   }
 }
 

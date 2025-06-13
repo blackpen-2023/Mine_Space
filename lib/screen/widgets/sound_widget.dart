@@ -2,16 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mine_space/screen/repo/setting_provider.dart';
 
-class SoundWidget extends StatefulWidget {
+class SoundWidget extends ConsumerStatefulWidget {
   final bool visible;
   const SoundWidget({Key? key, required this.visible}) : super(key: key);
 
   @override
-  State<SoundWidget> createState() => _SoundWidgetState();
+  ConsumerState<SoundWidget> createState() => _SoundWidgetState();
 }
 
-class _SoundWidgetState extends State<SoundWidget> {
+class _SoundWidgetState extends ConsumerState<SoundWidget> {
   late AudioPlayer _player;
   double _volume = 1.0;
   bool _isReady = false;
@@ -50,19 +52,27 @@ class _SoundWidgetState extends State<SoundWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = ref.watch(settingProvider);
+
     if (!_isReady) {
       return Visibility(
         visible: widget.visible,
         child: Container(
-          width: 300,
+          width: 250,
           height: 100,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.4),
-            border: Border.all(color: Colors.grey, width: 1),
+            color: settings.textColor.withOpacity(0.4),
+            border: Border.all(color: settings.textColor, width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const CircularProgressIndicator(),
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(
+              settings.textColor == Colors.white
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.2),
+            ),
+          ),
         ),
       );
     }
@@ -73,12 +83,12 @@ class _SoundWidgetState extends State<SoundWidget> {
         key: ValueKey('sound-on'),
         children: [
           Container(
-            width: 300,
+            width: 250,
             //height: 100,
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: EdgeInsets.only(top: 10),
             decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.4),
-              border: Border.all(color: Colors.grey, width: 1),
+              color: settings.textColor.withOpacity(0.4),
+              border: Border.all(color: settings.textColor, width: 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -89,7 +99,30 @@ class _SoundWidgetState extends State<SoundWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('빗소리', style: TextStyle(fontSize: 20)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(
+                            Icons.music_note_outlined,
+                            size: 14,
+                            color:
+                                settings.textColor == Colors.white
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.2),
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            '빗소리',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color:
+                                  settings.textColor == Colors.white
+                                      ? Colors.white
+                                      : Colors.white.withOpacity(0.2),
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           StreamBuilder<PlayerState>(
@@ -105,6 +138,10 @@ class _SoundWidgetState extends State<SoundWidget> {
                                       ? Icons.pause_circle_filled
                                       : Icons.play_circle_filled,
                                   size: 28,
+                                  color:
+                                      settings.textColor == Colors.white
+                                          ? Colors.white
+                                          : Colors.white.withOpacity(0.2),
                                 ),
                               );
                             },
@@ -127,6 +164,10 @@ class _SoundWidgetState extends State<SoundWidget> {
                                       ? Icons.repeat
                                       : Icons.repeat_one,
                                   size: 28,
+                                  color:
+                                      settings.textColor == Colors.white
+                                          ? Colors.white
+                                          : Colors.white.withOpacity(0.2),
                                 ),
                               );
                             },
@@ -136,42 +177,67 @@ class _SoundWidgetState extends State<SoundWidget> {
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          SizedBox(height: 8),
-          Container(
-            width: 300,
-            //height: 100,
-            padding: EdgeInsets.symmetric(vertical: 1),
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.4),
-              border: Border.all(color: Colors.grey, width: 1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Icon(Icons.volume_down, size: 24),
-                  Expanded(
-                    child: Slider(
-                      activeColor: Colors.black12,
-                      inactiveColor: Colors.grey.withOpacity(0.1),
-                      min: 0.0,
-                      max: 1.0,
-                      value: _volume,
-                      onChanged: (value) {
-                        setState(() {
-                          _volume = value;
-                        });
-                        _player.setVolume(value);
-                      },
+                SizedBox(height: 20),
+                Container(
+                  width: 250,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: settings.textColor.withOpacity(0.05),
+                    border: Border.all(
+                      color: settings.textColor.withOpacity(0.1),
+                      width: 0.1,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
                     ),
                   ),
-                  Icon(Icons.volume_up, size: 24),
-                ],
-              ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.volume_down,
+                          size: 24,
+                          color:
+                              settings.textColor == Colors.white
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.2),
+                        ),
+                        Expanded(
+                          child: Slider(
+                            activeColor:
+                                settings.textColor == Colors.white
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.2),
+                            inactiveColor:
+                                settings.textColor == Colors.white
+                                    ? Colors.white.withOpacity(0.5)
+                                    : Colors.white.withOpacity(0.2),
+                            min: 0.0,
+                            max: 1.0,
+                            value: _volume,
+                            onChanged: (value) {
+                              setState(() {
+                                _volume = value;
+                              });
+                              _player.setVolume(value);
+                            },
+                          ),
+                        ),
+                        Icon(
+                          Icons.volume_up,
+                          size: 24,
+                          color:
+                              settings.textColor == Colors.white
+                                  ? Colors.white
+                                  : Colors.white.withOpacity(0.2),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
